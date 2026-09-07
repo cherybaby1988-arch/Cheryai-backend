@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "30d";
 
 if (!JWT_SECRET && process.env.NODE_ENV !== "test") {
-  console.warn("⚠️  JWT_SECRET pa konfigire nan .env — sesyon yo PAP sekirize. Konfigire l anvan pwodiksyon.");
+  console.warn("JWT_SECRET pa konfigire nan .env — sesyon yo PAP sekirize. Konfigire l anvan pwodiksyon.");
 }
 
 export interface TokenPayload {
@@ -13,7 +13,8 @@ export interface TokenPayload {
 }
 
 export function signToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  const options: SignOptions = { expiresIn: JWT_EXPIRES_IN as SignOptions["expiresIn"] };
+  return jwt.sign(payload, JWT_SECRET, options);
 }
 
 export function verifyToken(token: string): TokenPayload {
